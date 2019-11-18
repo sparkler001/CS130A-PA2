@@ -24,7 +24,7 @@ public:
 
     // Insert given node and corresponding features into graph
     // You may assume the number of features is the same as all other nodes in the graph
-    void insert(int nodeId, vector<float> features);
+    void insert(Node n);
 
 
     //Insert given edge into graph
@@ -60,7 +60,7 @@ public:
     // nodeB id of second node
     // k: number of neighbors to evaluate for each node
     // w: weight vector
-    float jacardIndexOfTopKNeighborhoods(int nodeA, int nodeB, int k, vector<float> w);
+    float jacardIndexOfTopKNeighborhoods(int nodeAID, int nodeBID, int k, vector<float> w);
 
 };
 

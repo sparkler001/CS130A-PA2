@@ -6,21 +6,20 @@
 using namespace std;
 
 int main() {
-
-    vector<int> nodes{ 1, 2, 3, 4};
+    
+    vector<Node> nodes  {
+       Node(1, vector<float> { 10, 10}),
+       Node(2,vector<float> { 20, 20}),
+       Node(3, vector<float> { 30, 30}),
+       Node(4, vector<float> { 40, 40}) };
     
     vector<Edge> edges {Edge(1,2, 10), Edge(2, 3, 9), Edge(3, 4, 1), Edge(1, 3, 5)};
   
     int d = 2;
 
  
-    map<int, vector<float>> nodeToFeatures = {
-        {1, {10, 10}},
-        {2, {20, 20}},
-        {3, {30, 30}},
-        {4, {40, 40}} };
 
-    FeatureGraph graph = FeatureGraph(4, nodes, edges, d, nodeToFeatures);
+    FeatureGraph graph = FeatureGraph(4, d, nodes, edges);
     GraphAnalyzer analyzer = GraphAnalyzer(graph);
 
 
@@ -31,10 +30,11 @@ int main() {
     cout << analyzer.topKOpenTriangles(2) << "\n";
 
     
-    int newNode = 5;
+    int newNodeID = 5;
     vector<float> newFeatures {3, 3};
+    Node newNode = Node(newNodeID, newFeatures);
 
-    analyzer.insert(newNode, newFeatures);
+    analyzer.insert(newNode);
     analyzer.insert(Edge(4, 5, 32));
     
     

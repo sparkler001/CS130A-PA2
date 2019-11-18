@@ -21,14 +21,14 @@ public:
     // Constructor
     // 
     // N: The number of nodes
-    // nodeIds: the ids of nodes as integers
     // d: the sizee of the skill vectors of all nodes
-    // nodeIDtoSkillsMap: a map form the nodeID to their skiils vector
-    FeatureGraph(int N, vector<int> nodeIDs, vector<Edge> edges, int d, map<int, vector<float>> nodeIDToSkillsMap);
+    // nodes: vector of nodes to insert
+    // edges: vector of edges to insert
+    FeatureGraph(int N, int d, vector<Node> nodes, vector<Edge> edges);
 
 
     //Insert node with given ID and feature vectors
-    void insert(int nodeID, vector<float> feautres);
+    void insert(Node node);
 
     // insert given edge
     // May assume nodes in edge are already present

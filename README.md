@@ -73,7 +73,7 @@ Our testing code will always follow the following the pattern:
 To run `GraphTest`, run the following commands:
 ```
 make
-./GraphTester
+./GraphTester.o
 ```
 It is highly recommended that you do not edit the make file, and instead add your own tests to GraphTester.
 

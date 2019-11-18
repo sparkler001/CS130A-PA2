@@ -7,11 +7,11 @@
 using namespace std;
 
 
-FeatureGraph::FeatureGraph(int N, vector<int> nodeIDs, vector<Edge> edges, int d, map<int, vector<float>> nodeIDToSkillsMap) {
+FeatureGraph::FeatureGraph(int N, int d, vector<Node> nodes, vector<Edge> edges) {
     //TODO
 };
 
-void FeatureGraph::insert(int nodeID, vector<float> features){
+void FeatureGraph::insert(Node node){
     //TODO
 };
     

@@ -5,8 +5,8 @@
 using namespace std;
 
 
-void GraphAnalyzer::insert(int nodeID, vector<float> features) {
-    G.insert(nodeID, features);
+void GraphAnalyzer::insert(Node n) {
+    G.insert(n);
     // TODO Adjust calculations for ratio of open triangles and topKtriangles
 };
 
@@ -44,7 +44,7 @@ int GraphAnalyzer::topNonNeighbor(int nodeID, vector<float> w) {
 };
 
 
-float GraphAnalyzer::jacardIndexOfTopKNeighborhoods(int nodeA, int nodeB, int k, vector<float> w) {
+float GraphAnalyzer::jacardIndexOfTopKNeighborhoods(int nodeAID, int nodeBiID, int k, vector<float> w) {
     //TODO
     return 0;
 };
