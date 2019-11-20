@@ -2,6 +2,10 @@
 #define ANALYZER_H
 
 #include "FeatureGraph.h"
+#include <algorithm>
+#include <queue>
+#include <utility>
+#include <iostream>
 
 
 using namespace std;
