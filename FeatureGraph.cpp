@@ -10,8 +10,24 @@ using namespace std;
 FeatureGraph::FeatureGraph(int N, int d, vector<Node> nodes, vector<Edge> edges) {
     this->numberOfNodes = N;
     this->sizeOfSkill   = d;
-    this->allNodes = nodes;
-    this->allEdges = edges;
+
+    for (int i=0; i<nodes.size();i++) {
+        this->allNodes.push_back(nodes[i]);
+    }
+
+//    for (int i=0; i<allNodes.size();i++) {
+//        cout << "node id is " << allNodes[i].id << endl;
+//    }
+
+    for (int i=0; i<edges.size(); i++) {
+        this->allEdges.push_back(edges[i]);
+    }
+
+//    for (int i=0; i<allEdges.size();i++) {
+//        cout << "edge is connected "<< allEdges[i].IdA << " and " << allEdges[i].IdB << endl;
+//    }
+
+//    cout << "---" << endl;
     this->nodesMap = newMatrix(numberOfNodes, allEdges);
 };
 
@@ -28,7 +44,7 @@ void FeatureGraph::insert(Node node){
     //is there more convenient way to regenerate the whole matrix?
     this->nodesMap = newMatrix(numberOfNodes, allEdges);
 };
-    
+
 void FeatureGraph::insert(Edge edge){
     this->allEdges.push_back(edge);
 
@@ -44,21 +60,33 @@ bool FeatureGraph::find(int id){
     return false;
 }
 
-vector<int> FeatureGraph::neigborsId(int id){
-    vector<int> result;
-
-    // if there is no id, return null
-    if(!find(id)) return result;
-
-    //find all nodes' id that have relation with given node's id
-    for(int i = 0; i < numberOfNodes; i++){
-        if(this->nodesMap[id][i] == 1){
-            result.push_back(i);
-        }
+int FeatureGraph::getNodeIndex(int nodeId){
+    for (int i=0; i<allNodes.size();i++) {
+        if(this->allNodes[i].id == nodeId) return i;
     }
 
-    return result;
+    return -1;
 }
+
+//vector<int> FeatureGraph::neigborsId(int id){
+//    vector<int> result;
+//
+//    // if there is no id, return null
+//    if(!find(id)) return result;
+//
+//    //find all nodes' id that have relation with given node's id
+//    for(int i = 0; i < numberOfNodes; i++){
+//        int index = getNodeIndex(id);
+//        if(this->nodesMap[index][i] == 1){
+//
+//            for(int eachNode = 0; eachNode < numberOfNodes; eachNode++){
+//                if(this->allNodes[eachNode].id == allNodes[i].id)  result.push_back(allNodes[eachNode]);
+//            }
+//        }
+//    }
+//
+//    return result;
+//}
 
 vector<Node> FeatureGraph::neigbors(int id){
     vector<Node> result;
@@ -68,10 +96,11 @@ vector<Node> FeatureGraph::neigbors(int id){
 
     //find all nodes' id that have relation with given node's id
     for(int i = 0; i < numberOfNodes; i++){
-        if(this->nodesMap[id][i] == 1){
+        int index = getNodeIndex(id);
+        if(this->nodesMap[index][i] == 1){
 
             for(int eachNode = 0; eachNode < numberOfNodes; eachNode++){
-                if(this->allNodes[eachNode].id == i)  result.push_back(allNodes[eachNode]);
+                if(this->allNodes[eachNode].id == allNodes[i].id)  result.push_back(allNodes[i]);
             }
         }
     }
@@ -91,10 +120,21 @@ vector<vector<int> > FeatureGraph::newMatrix(int numberOfNodes, vector<Edge> edg
         matrix.push_back(temp);
     }
 
+//    cout << "--" << endl;
     //go through every edge in edges and change the relationship matrix to 1 in these two nodes
     for(vector<Edge>::iterator edgeIt = edges.begin(); edgeIt != edges.end(); edgeIt++){
-            matrix[edgeIt->IdA][edgeIt->IdB] = 1;
-            matrix[edgeIt->IdB][edgeIt->IdA] = 1;
+//            cout << "1" << endl;
+            int idA = getNodeIndex(edgeIt->IdA);
+            int idB = getNodeIndex(edgeIt->IdB);
+//            cout << "2" << endl;
+
+            if(idA == -1 || idB == -1){
+                cout << "This " << edgeIt->IdA << " or " << edgeIt->IdB << " does not exist in map! " << endl;
+                return matrix;
+            }
+
+            matrix[idA][idB] = 1;
+            matrix[idB][idA] = 1;
     }
 
     return matrix;
@@ -109,3 +149,4 @@ void FeatureGraph::printMatrix(){
         cout << endl;
     }
 }
+
