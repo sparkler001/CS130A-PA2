@@ -25,6 +25,8 @@ public:
 	// G: FeatureGraph to build on
     GraphAnalyzer(FeatureGraph& G): G(G) {};
 
+    // v0 is the index number of node
+    int DijkstraSearch(int startNode);
 
     // Insert given node and corresponding features into graph
     // You may assume the number of features is the same as all other nodes in the graph

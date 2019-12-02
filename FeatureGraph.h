@@ -38,24 +38,32 @@ public:
     // return whether this id is found in the feature graph
     bool find(int id);
 
-    // return all the neigbors' id with this id
-//    vector<int> neigborsId(int id);
-
     // return all the neigbors with this id
     vector<Node> neigbors(int id);
 
+    // return all none neigbors with this id
+    vector<Node> nonNeigbors(int id);
+
     vector<vector<int> > newMatrix(int numberOfNodes, vector<Edge> edges);
+
+    vector<vector<int> > newPathMatrix(int numberOfNodes, vector<Edge> edges);
 
     int getNodeIndex(int nodeId);
 
     void printMatrix();
 
+    void printPathMatrix();
+
+    int getNumberOfNodes(){ return numberOfNodes; }
+
+    vector<vector<int> > getNodesPathMap(){ return nodesPathMap; }
 private:
     int numberOfNodes;
     int sizeOfSkill;
     vector<Node> allNodes;
     vector<Edge> allEdges;
     vector<vector<int> > nodesMap;
+    vector<vector<int> > nodesPathMap;
 };
 
 //int main(){
@@ -95,11 +103,13 @@ private:
 //
 ////    cout << fg1.find(1000) << endl;
 //
-//    vector<Node> neigbor = fg1.neigbors(600);
+//    vector<Node> neigbor = fg1.nonNeigbors(600);
 //
 //    for(vector<Node>::iterator nodeIt = neigbor.begin(); nodeIt != neigbor.end(); nodeIt++){
 //        cout << nodeIt->id << endl;
 //    }
+//
+//    fg1.printPathMatrix();
 //
 //    return 0;
 //}

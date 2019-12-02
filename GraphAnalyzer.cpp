@@ -5,6 +5,9 @@
 #include <queue>
 #include <utility>
 #include <iostream>
+#include <stdio.h>
+
+#define INF 9999
 
 using namespace std;
 
@@ -19,9 +22,71 @@ void GraphAnalyzer::insert(Edge e) {
     // TODO Adjust calculations for ratio of open triangles and topKtriangles
 };
 
+// n is the sizeOfNodes
+// return the largest shorest path total weight for the start node
+int GraphAnalyzer::DijkstraSearch(int startNode) {
+    vector<vector<int> > weight_map = G.getNodesPathMap();
+    int n = G.getNumberOfNodes();
+
+    int cost[n][n], distance[n], pred[n];
+    int visited[n], count, mindistance, nextnode, i, j;
+    for (i = 0; i < n; i++)
+        for (j = 0; j < n; j++)
+            if (weight_map[i][j] == 0)
+                cost[i][j] = INF;
+            else
+                cost[i][j] = weight_map[i][j];
+    for (i = 0; i < n; i++) {
+        distance[i] = cost[startNode][i];
+        pred[i] = startNode;
+        visited[i] = 0;
+    }
+    distance[startNode] = 0;
+    visited[startNode] = 1;
+    count = 1;
+    while (count < n - 1) {
+        mindistance = INF;
+        for (i = 0; i < n; i++)
+            if (distance[i] < mindistance && !visited[i]) {
+                mindistance = distance[i];
+                nextnode = i;
+            }
+        visited[nextnode] = 1;
+        for (i = 0; i < n; i++)
+            if (!visited[i])
+                if (mindistance + cost[nextnode][i] < distance[i]) {
+                    distance[i] = mindistance + cost[nextnode][i];
+                    pred[i] = nextnode;
+                }
+        count++;
+    }
+    int result = 0;
+    for (i = 0; i < n; i++)
+        if (i != startNode) {
+            //  cout<<"\nDistance of node"<<i<<"="<<distance[i]<<endl;
+            if (result < distance[i] && distance[i] < INF) result = distance[i];
+
+            //  cout<<"\nPath="<<i;
+            j = i;
+            do {
+                j = pred[j];
+                // cout<<"<-"<<j;
+            } while (j != startNode);
+        }
+
+    return result;
+}
+
+// return the largest smallest path total weight in the graph
 int GraphAnalyzer::diameter() {
-    //TODO
-    return 2;
+    int max = 0;
+
+    for(int i=0;i<G.getNumberOfNodes();i++){
+
+        if(DijkstraSearch(i) > max)     max = DijkstraSearch(i);
+    }
+
+    return max;
 };
 
 
@@ -41,45 +106,62 @@ vector<int> GraphAnalyzer::topKNeighbors(int nodeID, int k,  vector<float> w) {
 
     vector<Node> neigbors = G.neigbors(nodeID);
 
+    //if top k numbers is larger than the numbers of neighbors
     if(k > neigbors.size())     k = neigbors.size();
 
     priority_queue<pair<int, int> > priorityQueue;
-//    cout<<"A45"<<endl;
+
     //calculate the weight of total feature of every neighbor and put each of them into the priority queue
     for(int eachNode = 0; eachNode < neigbors.size(); eachNode++) {
         int weight = 0;
         for (int eachFeature = 0; eachFeature < w.size(); eachFeature++) {
-//            int weight = 0;
+            int weight = 0;
             weight += neigbors[eachNode].features[eachFeature] * w[eachFeature];
 //            pair<int, int> temp (weight, neibors[eachNode].id);
 //            priorityQueue.push(make_pair(weight, neigbors[eachNode].id));
         }
+
         priorityQueue.push(make_pair(weight, neigbors[eachNode].id));
-//        cout<<priorityQueue.top()<<endl;
     }
-//    cout<<"A57"<<endl;
+
     //find k times the largest weight, store them into the result and pop it
     for(int eachNode = 0; eachNode < k; eachNode++){
         pair<int, int> top = priorityQueue.top();
-//        cout << top.first << "  "<< top.second <<endl;
+
         result.push_back(top.second);
         priorityQueue.pop();
     }
-//    cout<<"A64"<<endl;
-//    cout<<result[0]<<endl;
-//    cout<<result[1]<<endl;
-//    cout<<result[2]<<endl;
-//    cout<<result[3]<<endl;
-//    cout<<result[4]<<endl;
-//    cout<<result[5]<<endl;
-    return result;
 
+    return result;
 };
 
 
 int GraphAnalyzer::topNonNeighbor(int nodeID, vector<float> w) {
-    //TODO
-    return 1;
+    int result;
+
+    vector<Node> nonNeigbors = G.nonNeigbors(nodeID);
+
+    // if this node connect to all other node, return -1
+    if(nonNeigbors.empty())     return -1;
+
+    priority_queue<pair<int, int> > priorityQueue;
+
+    //calculate the weight of total feature of every neighbor and put each of them into the priority queue
+    for(int eachNode = 0; eachNode < nonNeigbors.size(); eachNode++) {
+        int weight = 0;
+        for (int eachFeature = 0; eachFeature < w.size(); eachFeature++) {
+            int weight = 0;
+            weight += nonNeigbors[eachNode].features[eachFeature] * w[eachFeature];
+        }
+
+        priorityQueue.push(make_pair(weight, nonNeigbors[eachNode].id));
+    }
+
+    //find the largest weight, store them into the result and pop it
+    pair<int, int> top = priorityQueue.top();
+
+    result = top.second;
+    return result;
 };
 
 
@@ -133,6 +215,16 @@ float GraphAnalyzer::jacardIndexOfTopKNeighborhoods(int nodeAID, int nodeBiID, i
 //    for(vector<int>::iterator nodeIt = result.begin(); nodeIt != result.end(); nodeIt++){
 //        cout << *nodeIt << endl;
 //    }
+//
+//    vector<int> a = ga.DijkstraSearch(0);
+//
+//    for(vector<int>::iterator nodeIt = a.begin(); nodeIt != a.end(); nodeIt++){
+//        cout << *nodeIt << endl;
+//    }
+//
+//    cout << "------" << endl;
+//    cout << ga.topNonNeighbor(600, weight) << endl;
+//
 //
 //    return 0;
 //}
