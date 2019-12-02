@@ -8,14 +8,18 @@ using namespace std;
 
 int main() {
 
-    vector<Node> nodes  {
+    vector<Node> nodes {
        Node(1, vector<float> { 10, 10}),
        Node(2,vector<float> { 20, 20}),
        Node(3, vector<float> { 30, 30}),
-       Node(4, vector<float> { 40, 40}) };
+       Node(4, vector<float> { 40, 40}),
+       Node(8, vector<float> { 33, 34}),
+       Node(11, vector<float> { 53, 54})
+    };
 
-    vector<Edge> edges {Edge(1,2, 10), Edge(2, 3, 9), Edge(3, 4, 1), Edge(1, 3, 5)};
+    vector<Edge> edges {Edge(1,2, 10), Edge(2, 3, 9), Edge(3, 4, 1), Edge(1, 3, 5), Edge(2, 8, 5), Edge(2, 11, 5), Edge(2, 4, 5), Edge(1,11, 10)};
 
+    int numberOfNodes = 6;
     int d = 2;
     vector<int> a;
     a.push_back(1);
@@ -26,17 +30,17 @@ int main() {
     b=a;
     cout<<b[1]<<endl;
     cout<<"good21"<<endl;
-    FeatureGraph graph = FeatureGraph(4, d, nodes, edges);
+    FeatureGraph graph = FeatureGraph(numberOfNodes, d, nodes, edges);
     cout<<"23"<<endl;
     GraphAnalyzer analyzer = GraphAnalyzer(graph);
 
 
-/*    cout << analyzer.diameter() << "\n";
+    cout << analyzer.diameter() << "\n";
 
-    cout << analyzer.openClosedTriangleRatio() << "\n";
+//    cout << analyzer.openClosedTriangleRatio() << "\n";
 
-    cout << analyzer.topKOpenTriangles(2) << "\n";
-*/
+//    cout << analyzer.topKOpenTriangles(2) << "\n";
+
     cout<<"33"<<endl;
     int newNodeID = 5;
     vector<float> newFeatures {3, 3};
@@ -45,6 +49,7 @@ int main() {
     analyzer.insert(newNode);
     analyzer.insert(Edge(4, 5, 32));
 
+    cout << "-----" << endl;
     cout<<"41"<<endl;
     vector<float> weights{.5, .5};
     cout<<"43"<<endl;
@@ -54,9 +59,10 @@ int main() {
         cout << *i << ",";
     cout << "\n";
 
-    /*cout << analyzer.topNonNeighbor(2, weights) << "\n";
+    cout << "-----" << endl;
+    analyzer.insert(Edge(2, 5, 32));
+    cout << analyzer.topNonNeighbor(2, weights) << "\n";
 
-    cout << analyzer.jacardIndexOfTopKNeighborhoods(1, 2, 2, weights);
-    */
+    cout << analyzer.jacardIndexOfTopKNeighborhoods(1, 2, 2, weights) << endl;
     return 0;
 }

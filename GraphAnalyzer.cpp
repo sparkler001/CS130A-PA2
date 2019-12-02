@@ -163,9 +163,26 @@ int GraphAnalyzer::topNonNeighbor(int nodeID, vector<float> w) {
     return top.second;
 };
 
-float GraphAnalyzer::jacardIndexOfTopKNeighborhoods(int nodeAID, int nodeBiID, int k, vector<float> w) {
-    //TODO
-    return 0;
+float GraphAnalyzer::jacardIndexOfTopKNeighborhoods(int nodeAID, int nodeBID, int k, vector<float> w) {
+    if(k < 1)   return 0;
+
+    vector<int> aNeigbor = topKNeighbors(nodeAID, k, w);
+    vector<int> bNeigbor = topKNeighbors(nodeBID, k, w);
+    float AandB = 0;
+    float AorB = 2*k;
+
+    for(int eachANode = 0; eachANode < k; eachANode++){
+        int nodeId = aNeigbor[eachANode];
+
+        for(int eachBNode = 0; eachBNode < k; eachBNode++){
+               if(nodeId == bNeigbor[eachBNode]){
+                   AandB++;
+                   AorB--;
+               }
+        }
+    }
+
+    return AandB/AorB;
 };
 
 //int main(){
