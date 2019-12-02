@@ -1,7 +1,7 @@
 # PA2
 UCSB 130A Fall 2019 PA2 starter code
 
-Notes: 
+Notes: ve
 *Be sure to read the "Policy on Academic Integrity" in the course syllabus.
 
 *If you are confused, ask on Piazza, during office hours, or during discussion sections.
@@ -24,24 +24,27 @@ There will be a small deadline on November 23rd with 10% of your grade. The rest
 This project will be graded using Gradescope's autograder. More instuctions on that will come in the next few days. 
 
 ## Tasks
-You will write code which maintains infomration about a weighted, undirected, graph where each node has an integer id and a skill vector.
+You will write code which maintains infomration about a weighted, undirected, graph where each node has an integer id and a skill 
+.
 
 You must implement the following methods:
 
-**M1**: Return the diameter of the graph.
+**M1**: Return the diameter of the graph. The distance between two nodes is given by the sum of the edge weights on the shortest path between them.
 
-**M2**: Return the ratio of open triangles to closed triangles.
+**M2**: Return the ratio of open triangles to closed triangles as a float. If there are no closed trianlges, return -1.
 
-**M3**: Return the top k open triangles. A triangle is given higher prioirty if it has a larger total edge weight. Store the triangles in a heap (see M7)
+**M3**: Return the top k open triangles. A triangle is given higher prioirty if it has a larger total edge weight. You should return a string where every each tirnalge is represented by its node-ids, comma separated, in decreasing order of prioirty (highest score first). Each triangle should be semi-colon separated. Example: "2,9,12;1,4,5;20,26,29" Store the triangles in a heap (see M7)
 
-**M4**: (Early Deadline) Given a seed node with id i, and weight vector w, find the top k-skilled individuals around i.
+**M4**: (Early Deadline) Given a seed node with id i, and weight vector w (unrelated to edge weights), find the top k-skilled individuals around i.
 If the weight vector w = \[w1, w2, w3 ... wd] and the skill fector of a neighboring node f = \[f1, f2, ....\], then the prioirity of a node is given by dot(w, f) = w1f1 + w2f2 + .... + wdfd
 
-**M5**: Given a seed node i and weight vector w, give the highest scoring node that does not have an edge connecting to i
+**M5**: Given a seed node i and weight vector w, give the highest scoring node that does not have an edge connecting to i. If i shares an edge with very node, return -1.
 
 **M6**: Given two seed nodes i, j and weight vector w, compute the similarites of their top-k neighborhoods unsing the Jacard Index
 
 **M7**: Insert a node into the graph. Insert an edge into the graph. Incrementally compute M2 and M3 such that the cost of the insert plus the cost of the next call to M2 or M3 will be exponentiall faster than if the results were calculated from scratch.
+
+_Note: If you insert an edge, this may reduce the number of closed triangles, meaning your heap strucutre will store triangles which were once open but are now closed. Deleting bogus elements is difficult becuase the heap strucutre only gives you acces to the min/max element. Think about altering your heap workflow to deal with bogus elements. How much does having bogus elements affect the time complexity?_
 
 Bonus:
 
@@ -77,7 +80,11 @@ make
 ```
 It is highly recommended that you do not edit the make file, and instead add your own tests to GraphTester.
 
+## Submission:
+Please submit to Gradescope, unzipped:
+`FeatureGraph.cpp`, `FeatureGraph.h`, `GraphAnalyzer.cpp`, `GraphAnalyzer.h`, and `GraphHelper.h`. Do not dubmit any other files.
+
 ## Deadlines
-**Novemebr 23rd**: In order to encourage you to start early 10% of your grade will be given for passing autograded testing for M4 by November 23rd at 11:59pm
+**Novemebr 23rd**: In order to encourage you to start early 10% of your grade will be given for passing autograded testing for M4 by November 23rd at 11:59pm.
 
 **December 7th**: The entire assignment will be due December 7th at 11:59pm
