@@ -41,6 +41,7 @@ int GraphAnalyzer::DijkstraSearch(int startNode) {
         pred[i] = startNode;
         visited[i] = 0;
     }
+
     distance[startNode] = 0;
     visited[startNode] = 1;
     count = 1;
@@ -60,11 +61,12 @@ int GraphAnalyzer::DijkstraSearch(int startNode) {
                 }
         count++;
     }
+
     int result = 0;
     for (i = 0; i < n; i++)
         if (i != startNode) {
             //  cout<<"\nDistance of node"<<i<<"="<<distance[i]<<endl;
-            if (result < distance[i] && distance[i] < INF) result = distance[i];
+            if (result < distance[i] && distance[i] < INF)  result = distance[i];
 
             //  cout<<"\nPath="<<i;
             j = i;
@@ -115,7 +117,7 @@ vector<int> GraphAnalyzer::topKNeighbors(int nodeID, int k,  vector<float> w) {
     for(int eachNode = 0; eachNode < neigbors.size(); eachNode++) {
         int weight = 0;
         for (int eachFeature = 0; eachFeature < w.size(); eachFeature++) {
-            int weight = 0;
+//            int weight = 0;
             weight += neigbors[eachNode].features[eachFeature] * w[eachFeature];
 //            pair<int, int> temp (weight, neibors[eachNode].id);
 //            priorityQueue.push(make_pair(weight, neigbors[eachNode].id));
@@ -137,8 +139,6 @@ vector<int> GraphAnalyzer::topKNeighbors(int nodeID, int k,  vector<float> w) {
 
 
 int GraphAnalyzer::topNonNeighbor(int nodeID, vector<float> w) {
-    int result;
-
     vector<Node> nonNeigbors = G.nonNeigbors(nodeID);
 
     // if this node connect to all other node, return -1
@@ -150,7 +150,7 @@ int GraphAnalyzer::topNonNeighbor(int nodeID, vector<float> w) {
     for(int eachNode = 0; eachNode < nonNeigbors.size(); eachNode++) {
         int weight = 0;
         for (int eachFeature = 0; eachFeature < w.size(); eachFeature++) {
-            int weight = 0;
+//            int weight = 0;
             weight += nonNeigbors[eachNode].features[eachFeature] * w[eachFeature];
         }
 
@@ -160,10 +160,8 @@ int GraphAnalyzer::topNonNeighbor(int nodeID, vector<float> w) {
     //find the largest weight, store them into the result and pop it
     pair<int, int> top = priorityQueue.top();
 
-    result = top.second;
-    return result;
+    return top.second;
 };
-
 
 float GraphAnalyzer::jacardIndexOfTopKNeighborhoods(int nodeAID, int nodeBiID, int k, vector<float> w) {
     //TODO

@@ -14,6 +14,7 @@ FeatureGraph::FeatureGraph(int N, int d, vector<Node> nodes, vector<Edge> edges)
 
     for (int i=0; i<nodes.size();i++) {
         this->allNodes.push_back(nodes[i]);
+//        cout << allNodes[i].id << endl;
     }
 
 //    for (int i=0; i<allNodes.size();i++) {
@@ -71,17 +72,19 @@ int FeatureGraph::getNodeIndex(int nodeId){
     return -1;
 }
 
+// return all nodes that connect to this input node
 vector<Node> FeatureGraph::neigbors(int id){
     vector<Node> result;
 
     // if there is no id, return null
     if(!find(id)) return result;
 
-    //find all nodes' id that have relation with given node's id
+    // find all nodes' id that have relation with given node's id
     for(int i = 0; i < numberOfNodes; i++){
         int index = getNodeIndex(id);
         if(this->nodesMap[index][i] == 1){
 
+            // check if the edge contains the available node
             for(int eachNode = 0; eachNode < numberOfNodes; eachNode++){
                 if(this->allNodes[eachNode].id == allNodes[i].id)  result.push_back(allNodes[i]);
             }
@@ -91,6 +94,7 @@ vector<Node> FeatureGraph::neigbors(int id){
     return result;
 }
 
+// return all nodes that not connect to this input node
 vector<Node> FeatureGraph::nonNeigbors(int id){
     vector<Node> result;
 
@@ -100,10 +104,13 @@ vector<Node> FeatureGraph::nonNeigbors(int id){
     //find all nodes' id that have relation with given node's id
     for(int i = 0; i < numberOfNodes; i++){
         int index = getNodeIndex(id);
-        if(this->nodesMap[index][i] == 0){
+        if(this->nodesPathMap[index][i] == INF){
 
+            // check if the edge contains the available node
             for(int eachNode = 0; eachNode < numberOfNodes; eachNode++){
-                if(this->allNodes[eachNode].id == allNodes[i].id)  result.push_back(allNodes[i]);
+                if(this->allNodes[eachNode].id == allNodes[i].id)  {
+                    result.push_back(allNodes[i]);
+                }
             }
         }
     }
