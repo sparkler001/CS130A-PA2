@@ -6,6 +6,7 @@
 #include <utility>
 #include <iostream>
 #include <stdio.h>
+#include <string>
 
 #define INF 9999
 
@@ -93,13 +94,50 @@ int GraphAnalyzer::diameter() {
 
 
 float GraphAnalyzer::openClosedTriangleRatio() {
-    //TODO
-    return .5;
+    if(G.getClosedTriangles().empty() && G.getNumberOfClosedTriangles() == 0) return -1;
+
+    cout << " number of open triangles are " << G.getNumberOfOpenTriangles() << endl;
+    cout << " number of closed triangles are " << G.getNumberOfClosedTriangles() << endl;
+    return G.getNumberOfOpenTriangles() / G.getNumberOfClosedTriangles();
 };
 
 string GraphAnalyzer::topKOpenTriangles(int k) {
-    //TODO
-    return "2,3,4";
+    if(k <= 0)  {
+        cout << "invaild input! the input should be greater than 0!" << endl;
+        return "";
+    }
+
+    if(G.getNumberOfOpenTriangles() == 0){
+        cout << "there is no open triangles in this graph! " << endl;
+        return "";
+    }
+
+    int numberOfTriangle = G.getNumberOfOpenTriangles();
+    //if top k numbers is larger than the numbers of open triangles, change k to the total number of open triangles
+    if(k > numberOfTriangle)    k = numberOfTriangle;
+
+    string result;
+
+    priority_queue<pair<int, string>> priorityQueue;
+
+    for(int eachTriangle = 0; eachTriangle < numberOfTriangle; eachTriangle++){
+        Triangle temp = G.getOpenTriangles()[eachTriangle];
+        string tname = to_string(temp.getFirstNode()) + "," + to_string(temp.getSecondNode()) + "," + to_string(temp.getThirdNode());
+        int weight = temp.getTotalWeight();
+
+        priorityQueue.push(make_pair(weight, tname));
+    }
+
+    for (int eachTriangle = 0; eachTriangle < k-1; ++eachTriangle) {
+        pair<int, string> top = priorityQueue.top();
+        result += top.second + ";";
+//        cout << priorityQueue.top().second << "has been added" << endl;
+        priorityQueue.pop();
+    }
+
+    result += priorityQueue.top().second;
+
+    return result;
 };
 
 

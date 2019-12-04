@@ -54,9 +54,33 @@ public:
 
     void printPathMatrix();
 
+    // find all open triangles for one node
+    void findTriangles(int nodeId);
+
+    // find all open triangles for all nodes
+    void findTriangles();
+
+    // add an open triangle in open triangles' list
+    // if it is open triangle, add it, if not, return
+    // if this triangle is already exists, just return
+    void addOpenTriangles(Triangle t1);
+
+    // add an closed triangle in open triangles' list
+    // if it is closed triangle, add it, if not, return
+    // if this triangle is already exists, just return
+    void addClosedTriangles(Triangle t1);
+
     int getNumberOfNodes(){ return numberOfNodes; }
 
     vector<vector<int> > getNodesPathMap(){ return nodesPathMap; }
+
+    vector<Triangle> getOpenTriangles(){ return openTriangles; }
+
+    float getNumberOfOpenTriangles(){ return numberOfOpenTriangles; }
+
+    vector<Triangle> getClosedTriangles(){ return closedTriangles; }
+
+    float getNumberOfClosedTriangles(){ return numberOfClosedTriangles; }
 private:
     int numberOfNodes;
     int sizeOfSkill;
@@ -64,6 +88,10 @@ private:
     vector<Edge> allEdges;
     vector<vector<int> > nodesMap;
     vector<vector<int> > nodesPathMap;
+    vector<Triangle> openTriangles;
+    float numberOfOpenTriangles;
+    vector<Triangle> closedTriangles;
+    float numberOfClosedTriangles;
 };
 
 //int main(){
@@ -110,6 +138,13 @@ private:
 //    }
 //
 //    fg1.printPathMatrix();
+//
+//    fg1.findTriangles(100);
+//
+//    vector<Triangle> t1 = fg1.getOpenTriangles();
+//    for(vector<Triangle>::iterator nodeIt = t1.begin(); nodeIt != t1.end(); nodeIt++){
+//        cout << "this triangle " << nodeIt->getFirstNode() << ", " << nodeIt->getSecondNode() << ", " << nodeIt->getThirdNode() << " is an open triangle!" << endl;
+//    }
 //
 //    return 0;
 //}

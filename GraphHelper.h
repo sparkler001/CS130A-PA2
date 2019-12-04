@@ -21,24 +21,51 @@ struct Edge {
     Edge(int IdA, int IdB, int weight): IdA(IdA), IdB(IdB), weight(weight) {}
 };
 
+
 class Triangle {
     // TODO make a Triangle class with appropriate fields and methods
 
 public:
 
-    // TODO make appropriate constuctor
-    Triangle() { }
-    
+    Triangle() {
+        IdA = -1;
+        IdB = -1;
+        IdC = -1;
+        openTriangle = false;
+        totalWeight = -1;
+    }
+
+    Triangle(int IdA, int IdB, int IdC, bool isOpenTriangle, int totalWeight):
+        IdA(IdA), IdB(IdB), IdC(IdC), openTriangle(isOpenTriangle), totalWeight(totalWeight) {}
+
+    bool isOpenTriangle() { return this->openTriangle; };
+
+    int getFirstNode() { return IdA; };
+
+    int getSecondNode() { return IdB; };
+
+    int getThirdNode() { return IdC; };
+
+    int getTotalWeight() { return totalWeight; };
+
     // Operator overloading for storage in priority queue
-    // returns true iff t2 is greater than t1. 
+    // returns true iff t2 is greater than t1.
     //
     // Note: Must be transitive
     //      This means if t1<t2 and t2<t3 than t1< t3
     bool operator < (Triangle const &other) {
-        //TODO
-        return true;
-    }  
+        return totalWeight < other.totalWeight;
+    }
 
+    bool operator = (Triangle const &other) {
+        return ((IdA == other.IdA) && (IdB == other.IdB) && (IdC == other.IdC));
+    }
+private:
+    int IdA;
+    int IdB;
+    int IdC;
+    bool openTriangle;
+    int totalWeight;
 };
 
 

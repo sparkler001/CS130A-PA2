@@ -32,7 +32,6 @@ public:
     // You may assume the number of features is the same as all other nodes in the graph
     void insert(Node n);
 
-
     //Insert given edge into graph
     // You may assume that the edge contains nodes already inserted into the graph
     void insert(Edge e);

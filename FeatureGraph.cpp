@@ -3,6 +3,8 @@
 #include "FeatureGraph.h"
 #include "GraphHelper.h"
 #include <iostream>
+#include <algorithm>
+#include <queue>
 
 #define INF 9999
 
@@ -31,6 +33,10 @@ FeatureGraph::FeatureGraph(int N, int d, vector<Node> nodes, vector<Edge> edges)
 
     this->nodesMap = newMatrix(numberOfNodes, allEdges);
     this->nodesPathMap = newPathMatrix(numberOfNodes, allEdges);
+
+    numberOfOpenTriangles = 0;
+    numberOfClosedTriangles = 0;
+    findTriangles();
 };
 
 void FeatureGraph::insert(Node node){
@@ -53,6 +59,9 @@ void FeatureGraph::insert(Edge edge){
 
     this->nodesMap = newMatrix(numberOfNodes, allEdges);
     this->nodesPathMap = newPathMatrix(numberOfNodes, allEdges);
+//    findTriangles();
+    findTriangles(edge.IdA);
+    findTriangles(edge.IdB);
 };
 
 bool FeatureGraph::find(int id){
@@ -164,7 +173,7 @@ void FeatureGraph::printPathMatrix(){
     for(int row = 0; row < this->numberOfNodes; row++){
         for(int column = 0; column < this->numberOfNodes; column++){
             cout << this->nodesPathMap[row][column];
-//            cout << " ";
+            cout << " ";
         }
         cout << endl;
     }
@@ -198,4 +207,103 @@ vector<vector<int> > FeatureGraph::newPathMatrix(int numberOfNodes, vector<Edge>
     }
 
     return matrix;
+}
+
+void FeatureGraph::findTriangles(int nodeId){
+    // if there is no id, just return
+    if(!find(nodeId)) return;
+
+    vector<Node> nodeNeighbors = neigbors(nodeId);
+    for(int eachNode = 0; eachNode < nodeNeighbors.size(); eachNode++){
+        int nodeAId = nodeNeighbors[eachNode].id;
+
+        for(int nextNode = eachNode+1; nextNode < nodeNeighbors.size(); nextNode++){
+            int nodeBId = nodeNeighbors[nextNode].id;
+
+            int indexA = getNodeIndex(nodeAId);
+            int indexB = getNodeIndex(nodeBId);
+
+            // find the sequence of these three nodes by their id from the smallest to the largest
+            priority_queue<int> priorityQueue;
+            priorityQueue.push(nodeId);
+            priorityQueue.push(nodeAId);
+            priorityQueue.push(nodeBId);
+
+            int nodeA = priorityQueue.top();
+            priorityQueue.pop();
+            int nodeB = priorityQueue.top();
+            priorityQueue.pop();
+            int nodeC = priorityQueue.top();
+            priorityQueue.pop();
+
+            // calculate the total weight of the triangle
+            int node = getNodeIndex(nodeId);
+            int totalWeight = nodesPathMap[node][indexA] + nodesPathMap[node][indexB];
+
+            // find if this two neighbors have path, if they have, put them into closed triangle, else, put into open triagles
+            // if there already exist the same triangle, skip it and continue
+            if(this->nodesMap[indexA][indexB] == 1){
+
+                totalWeight += nodesPathMap[indexA][indexB];
+                Triangle closedTriangle(nodeC, nodeB, nodeA, false, totalWeight);
+                addClosedTriangles(closedTriangle);
+
+                // if it this is a open triangle, delete it in the open triangle
+                for(int i = 0; i < numberOfOpenTriangles; i++){
+                    if(openTriangles[i].operator=(closedTriangle))     {
+                        this->openTriangles.erase(openTriangles.begin()+i);
+                        numberOfOpenTriangles--;
+                    }
+                }
+                continue;
+            }
+
+            Triangle openTriangle(nodeC, nodeB, nodeA, true, totalWeight);
+            addOpenTriangles(openTriangle);
+        }
+
+    }
+
+}
+
+void FeatureGraph::findTriangles(){
+
+    for(int eachNode = 0; eachNode < numberOfNodes; eachNode++){
+        int nodeId = allNodes[eachNode].id;
+        findTriangles(nodeId);
+    }
+}
+
+void FeatureGraph::addOpenTriangles(Triangle t1){
+    if(!t1.isOpenTriangle()){
+        cout << "this triangle " << t1.getFirstNode() << ", " << t1.getSecondNode() << ", " << t1.getThirdNode() << " is not an open triangle!" << endl;
+        return;
+    }
+
+    // check if t1 triangle is already in the open triangle lists
+    for(vector<Triangle>::iterator triangle = openTriangles.begin(); triangle != openTriangles.end(); triangle++){
+        if(t1.operator=(*triangle))  return;
+    }
+
+    openTriangles.push_back(t1);
+    numberOfOpenTriangles++;
+    cout << "this triangle " << t1.getFirstNode() << ", " << t1.getSecondNode() << ", " << t1.getThirdNode()
+         << " is an open triangle! and its weight is " << t1.getTotalWeight() << endl;
+}
+
+void FeatureGraph::addClosedTriangles(Triangle t1){
+    if(t1.isOpenTriangle()){
+        cout << "this triangle " << t1.getFirstNode() << ", " << t1.getSecondNode() << ", " << t1.getThirdNode() << " is not a closed triangle!" << endl;
+        return;
+    }
+
+    // check if t1 triangle is already in the open triangle lists
+    for(vector<Triangle>::iterator triangle = closedTriangles.begin(); triangle != closedTriangles.end(); triangle++){
+        if(t1.operator=(*triangle))  return;
+    }
+
+    closedTriangles.push_back(t1);
+    numberOfClosedTriangles++;
+    cout << "this triangle " << t1.getFirstNode() << ", " << t1.getSecondNode() << ", " << t1.getThirdNode()
+         << " is a closed triangle and its weight is " << t1.getTotalWeight() << endl;
 }
