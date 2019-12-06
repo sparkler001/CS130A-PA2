@@ -1,11 +1,14 @@
 #ifndef ANALYZER_H
 #define ANALYZER_H
 
+//#include "GraphHelper.h"
 #include "FeatureGraph.h"
 #include <algorithm>
 #include <queue>
 #include <utility>
 #include <iostream>
+#include <stdio.h>
+#include <string>
 
 
 using namespace std;
@@ -15,15 +18,16 @@ using namespace std;
 class GraphAnalyzer {
 
 
-public:	
-		
+public:
+    //constructor
+    //
+    // G: FeatureGraph to build on
+    GraphAnalyzer(FeatureGraph& G);
+
 	FeatureGraph G;
 	//TODO: Store a heap of triangeles using cpp prioirty_queue
 
-    //constructor
-	// 
-	// G: FeatureGraph to build on
-    GraphAnalyzer(FeatureGraph& G): G(G) {};
+    priority_queue<Triangle> Triangles;
 
     // v0 is the index number of node
     int DijkstraSearch(int startNode);

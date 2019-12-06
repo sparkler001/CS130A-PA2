@@ -46,20 +46,21 @@ public:
 
     int getThirdNode() { return IdC; };
 
-    int getTotalWeight() { return totalWeight; };
+    int getTotalWeight() const { return totalWeight; };
 
     // Operator overloading for storage in priority queue
     // returns true iff t2 is greater than t1.
     //
-    // Note: Must be transitive
+    // Note: Must be trans itive
     //      This means if t1<t2 and t2<t3 than t1< t3
-    bool operator < (Triangle const &other) {
-        return totalWeight < other.totalWeight;
-    }
 
-    bool operator = (Triangle const &other) {
+//    bool operator < (Triangle other) {
+//        return totalWeight <= other.totalWeight;
+//    };
+
+    bool operator = (Triangle other) {
         return ((IdA == other.IdA) && (IdB == other.IdB) && (IdC == other.IdC));
-    }
+    };
 private:
     int IdA;
     int IdB;
@@ -68,6 +69,21 @@ private:
     int totalWeight;
 };
 
+//struct CompareWeight {
+//    bool operator < (Triangle const &t1, Triangle const &t2) {
+//        return t1.getTotalWeight() <= t2.getTotalWeight();
+//    }
+//};
+
+bool operator < (Triangle t1, Triangle t2);
+//{
+//    return t1.getTotalWeight() <= t2.getTotalWeight();
+//}
+
+
+//bool operator = (Triangle const &other) {
+//    return ((IdA == other.IdA) && (IdB == other.IdB) && (IdC == other.IdC));
+//}
 
 #endif
 

@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include "FeatureGraph.h"
-#include "GraphHelper.h"
+//#include "GraphHelper.h"
 #include <iostream>
 #include <algorithm>
 #include <queue>
@@ -9,6 +9,10 @@
 #define INF 9999
 
 using namespace std;
+
+bool operator < (Triangle t1, Triangle t2) {
+    return t1.getTotalWeight() <= t2.getTotalWeight();
+}
 
 FeatureGraph::FeatureGraph(int N, int d, vector<Node> nodes, vector<Edge> edges) {
     this->numberOfNodes = N;
@@ -209,6 +213,7 @@ vector<vector<int> > FeatureGraph::newPathMatrix(int numberOfNodes, vector<Edge>
     return matrix;
 }
 
+// find the node and check if after the edge insertion, one of open triangle become closed triangle
 void FeatureGraph::findTriangles(int nodeId){
     // if there is no id, just return
     if(!find(nodeId)) return;
@@ -250,7 +255,7 @@ void FeatureGraph::findTriangles(int nodeId){
 
                 // if it this is a open triangle, delete it in the open triangle
                 for(int i = 0; i < numberOfOpenTriangles; i++){
-                    if(openTriangles[i].operator=(closedTriangle))     {
+                    if((openTriangles[i] = closedTriangle)){
                         this->openTriangles.erase(openTriangles.begin()+i);
                         numberOfOpenTriangles--;
                     }
@@ -282,10 +287,11 @@ void FeatureGraph::addOpenTriangles(Triangle t1){
 
     // check if t1 triangle is already in the open triangle lists
     for(vector<Triangle>::iterator triangle = openTriangles.begin(); triangle != openTriangles.end(); triangle++){
-        if(t1.operator=(*triangle))  return;
+        if((t1 = *triangle))  return;
     }
 
     openTriangles.push_back(t1);
+//    InsideTriangles.push(make_pair(t1.getTotalWeight(),t1));
     numberOfOpenTriangles++;
     cout << "this triangle " << t1.getFirstNode() << ", " << t1.getSecondNode() << ", " << t1.getThirdNode()
          << " is an open triangle! and its weight is " << t1.getTotalWeight() << endl;
@@ -299,10 +305,11 @@ void FeatureGraph::addClosedTriangles(Triangle t1){
 
     // check if t1 triangle is already in the open triangle lists
     for(vector<Triangle>::iterator triangle = closedTriangles.begin(); triangle != closedTriangles.end(); triangle++){
-        if(t1.operator=(*triangle))  return;
+        if((t1 =(*triangle)))  return;
     }
 
     closedTriangles.push_back(t1);
+//    InsideTriangles.push(make_pair(t1.getTotalWeight(),t1));
     numberOfClosedTriangles++;
     cout << "this triangle " << t1.getFirstNode() << ", " << t1.getSecondNode() << ", " << t1.getThirdNode()
          << " is a closed triangle and its weight is " << t1.getTotalWeight() << endl;

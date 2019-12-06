@@ -7,6 +7,8 @@
 #include <map>
 #include "GraphHelper.h"
 #include <iostream>
+#include <algorithm>
+#include <queue>
 
 
 using namespace std;
@@ -81,6 +83,8 @@ public:
     vector<Triangle> getClosedTriangles(){ return closedTriangles; }
 
     float getNumberOfClosedTriangles(){ return numberOfClosedTriangles; }
+
+//    priority_queue<pair<int, Triangle> > getTriangles(){ return InsideTriangles; }
 private:
     int numberOfNodes;
     int sizeOfSkill;
@@ -92,6 +96,7 @@ private:
     float numberOfOpenTriangles;
     vector<Triangle> closedTriangles;
     float numberOfClosedTriangles;
+//    priority_queue<Triangle> InsideTriangles;
 };
 
 //int main(){

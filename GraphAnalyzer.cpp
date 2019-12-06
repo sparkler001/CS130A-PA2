@@ -1,5 +1,5 @@
-#include "GraphHelper.h"
-#include "FeatureGraph.h"
+//#include "GraphHelper.h"
+//#include "FeatureGraph.h"
 #include "GraphAnalyzer.h"
 #include <algorithm>
 #include <queue>
@@ -12,6 +12,25 @@
 
 using namespace std;
 
+GraphAnalyzer::GraphAnalyzer(FeatureGraph& G):G(G){
+    for (int eachTriangle = 0; eachTriangle < G.getNumberOfOpenTriangles(); ++eachTriangle) {
+        Triangle t1 = G.getOpenTriangles()[eachTriangle];
+        Triangles.push(t1);
+    }
+
+    for (int eachTriangle = 0; eachTriangle < G.getNumberOfClosedTriangles(); ++eachTriangle) {
+        Triangle t1 = G.getOpenTriangles()[eachTriangle];
+        Triangles.push(t1);
+    }
+
+    // print all the triangles in the Triangles by its total weight from large to small, but pop all of them
+//    for (int eachTriangle = 0; eachTriangle < G.getNumberOfOpenTriangles(); ++eachTriangle){
+//        Triangle t1 = G.getOpenTriangles()[eachTriangle];
+//        cout << "this triangle " << t1.getFirstNode() << ", " << t1.getSecondNode() << ", " << t1.getThirdNode()
+//             << " is an open triangle! and its weight is " << t1.getTotalWeight() << " and its is a triangle "<< endl;
+//        this->Triangles.pop();
+//    }
+}
 
 void GraphAnalyzer::insert(Node n) {
     G.insert(n);
@@ -19,9 +38,18 @@ void GraphAnalyzer::insert(Node n) {
 };
 
 void GraphAnalyzer::insert(Edge e) {
+    int oldOpenTriangles = G.getNumberOfOpenTriangles();
+
     G.insert(e);
     // TODO Adjust calculations for ratio of open triangles and topKtriangles
-};
+
+    // there is no open triangles switch to closed
+    if(oldOpenTriangles == G.getNumberOfOpenTriangles()) return;
+
+    // pop the top and store them in temp triangle list until find there is a triangle switch from open to closed
+    vector<Triangle> tempTriangles;
+//    for()
+}
 
 // n is the sizeOfNodes
 // return the largest shorest path total weight for the start node
@@ -118,7 +146,7 @@ string GraphAnalyzer::topKOpenTriangles(int k) {
 
     string result;
 
-    priority_queue<pair<int, string>> priorityQueue;
+    priority_queue<pair<int, string> > priorityQueue;
 
     for(int eachTriangle = 0; eachTriangle < numberOfTriangle; eachTriangle++){
         Triangle temp = G.getOpenTriangles()[eachTriangle];
